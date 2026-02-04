@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class MouseFollowing : MonoBehaviour
 {
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public GameObject mask;
 
     // Update is called once per frame
     void Update()
@@ -15,6 +10,7 @@ public class MouseFollowing : MonoBehaviour
         Vector3 p = Input.mousePosition;
         Vector3 pos = Camera.main.ScreenToWorldPoint(p);
         this.transform.position = pos;
+        mask.transform.position = Input.mousePosition;
         //transform.position = Input.mousePosition;
     }
 }

@@ -13,12 +13,14 @@ public class Enemy : MonoBehaviour
     private GameObject _bloodFlaque;
     private Rigidbody2D _rb2d;
     public LayerMask ObstacleMask;
+    OutlineScript.Factory _outlineFactory;
 
     public NavMeshAgent agent;
 
     [Inject]
-    public void Construct( PlayerScript player, [Inject(Id = "BloodFlaque")] GameObject BloodFlaque)
+    public void Construct( PlayerScript player, [Inject(Id = "BloodFlaque")] GameObject BloodFlaque, OutlineScript.Factory OutlineFactory)
     {
+        _outlineFactory = OutlineFactory;
         _player = player;
         _bloodFlaque = BloodFlaque;
     }
@@ -39,15 +41,19 @@ public class Enemy : MonoBehaviour
 
     public void Spillingblood()
     {
+        GameObject newSpill = Instantiate(bloodSpill, transform.position, transform.rotation);
+        var newFlaque = _outlineFactory.Create();
+        newFlaque.transform.position = transform.position + 5 * transform.forward;
+        newFlaque.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 380f));
         //animation ahah on perd du sang
         _health -= 10;
         if (_health <= 0)
         {
-            Death();
-            return;
+            newSpill.transform.localScale = new Vector3(Random.Range(1f, 2.5f), Random.Range(1f, 2.5f), newSpill.transform.localScale.z);
+            newFlaque.transform.localScale = new Vector3(Random.Range(1f, 2.5f), Random.Range(1f, 2.5f), newFlaque.transform.localScale.z);
+            Destroy(gameObject);
         }
-        Instantiate(bloodSpill, transform.position,transform.rotation);
-        Instantiate(_bloodFlaque, transform.position+ 5*transform.forward, Quaternion.Euler(0.0f,0.0f, Random.Range(0.0f, 380f)));
+
     }
     void Death()
     {
@@ -64,21 +70,7 @@ public class Enemy : MonoBehaviour
             collision.GetComponent<PlayerScript>().RecievingDamage(damageOutput);
         }
     }
-    IEnumerator AttackAfterDelay(float attackDelay)
-    {
-        yield return new WaitForSeconds(attackDelay);
-        var radius = 1.5f;
 
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(this.transform.position, radius);
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.tag == "Player")
-            {
-                hitCollider.GetComponent<PlayerScript>().RecievingDamage(damageOutput) ;
-                Debug.Log("uii");
-            }
-        }
-    }
     public class Factory : PlaceholderFactory<Enemy>
     {
     }

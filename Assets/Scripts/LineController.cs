@@ -21,7 +21,9 @@ public class LineController : MonoBehaviour
     {
         for (int i = 0; i < _points.Length; i++)
         {
-            _lineRenderer.SetPosition(i,_points[i].position);
+            var pointZNull = _points[i].position;
+            pointZNull.z = 0; 
+            _lineRenderer.SetPosition(i,pointZNull);
         }
     }
 }

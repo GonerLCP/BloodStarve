@@ -1,68 +1,79 @@
-using UnityEngine;
-using Zenject;
+using ModestTree;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Zenject;
+using Zenject.SpaceFighter;
 
 public class PlayerScript : MonoBehaviour
 {
-    Rigidbody2D rb;
+    [SerializeField]
+    private GameObject _arrow;
+    [SerializeField]
+    private SpriteRenderer _spriteRenderer;
+    [SerializeField]
+    float _arrowRadius;
+    [SerializeField]
+    float _radius;
+
+    public Vector3 center;
+    public LayerMask layerMask;
     public float speed;
+
+    Rigidbody2D rb;
+    
     Vector2 velocity;
     Enemy.Factory enemyFactory;
-    public Vector3 center;
-    public float radius;
-    public LayerMask layerMask;
+
     float health = 100f;
     float invinsibilityDuration = 1f;
     bool invincible=false;
-    public SpriteRenderer spriteRenderer;
-    private GameObject _bloodSplash;
-    private GameObject _bloodFlaque;
+    
 
-    public float max;
-    public float min;
+    float angle;
+
+
 
     [Inject]
-    public void Construct(Enemy.Factory _enemyFactory, [Inject(Id = "BloodFlaque")] GameObject BloodFlaque)
+    public void Construct(Enemy.Factory _enemyFactory)
     {
         enemyFactory = _enemyFactory;
-        _bloodFlaque = BloodFlaque; 
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        InputManager.Instance.OnAttack += PlayerAttack;
+        InputManager.Instance.OnCreateEnemy += EnemyCreate;
+    }
+    private void OnDisable()
+    {
+        InputManager.Instance.OnAttack -= PlayerAttack;
+        InputManager.Instance.OnCreateEnemy -= EnemyCreate;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         velocity.y = Input.GetAxis("Vertical"); 
         velocity.x = Input.GetAxis("Horizontal");
-        velocity = velocity*speed + (velocity.normalized*Time.deltaTime*speed);
+        velocity = velocity * speed + (velocity.normalized * Time.deltaTime * speed);
         rb.linearVelocity = velocity;
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            enemyFactory.Create();
-        }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            PlayerAttack();
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Sacrifice();
-        }
-        //player.rotation = Quaternion.LookRotation(velocity,Vector3.up);
-        //player.rotation = Quaternion.Euler(0, 0, Vector2.Angle(player.up, velocity));
+        RotateArrow();
         if (velocity != Vector2.zero) { rb.MoveRotation(Quaternion.LookRotation(transform.forward, velocity)); }
     }
 
+    void EnemyCreate()
+    {
+        enemyFactory.Create();
+
+    }
     void PlayerAttack()
     {
         center = Vector3.RotateTowards(center, transform.up, 3.0f, 0.0f);
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(this.transform.position, radius, layerMask);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(_arrow.transform.position, _radius, layerMask);
         foreach (var hitCollider in hitColliders)
         {
             hitCollider.GetComponent<Enemy>().Spillingblood();
@@ -70,10 +81,16 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    void RotateArrow()
     {
-        center = Vector3.RotateTowards(center, transform.up,3.0f,0.0f);
-        Gizmos.DrawSphere(this.transform.position+center, radius);
+        Vector2 dir = ((Vector2)this.transform.position - (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition)).normalized;
+        Vector2 orbitPos = (Vector2)this.transform.position + dir * _arrowRadius;
+        _arrow.transform.position = orbitPos;
+
+        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        angle += 90f;
+
+        _arrow.transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     public void RecievingDamage(float damageDealt)
@@ -98,19 +115,19 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator invicilityAnimation() //Change couleur du sprite
     {
-        GetComponent<CapsuleCollider2D>().enabled = false;
         while (invincible == true)
         {
-            spriteRenderer.color = Color.red;
+            _spriteRenderer.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            spriteRenderer.color = Color.white;
+            _spriteRenderer.color = Color.white;
             yield return new WaitForSeconds(0.1f);
         }
-        spriteRenderer.color = Color.white;
+        _spriteRenderer.color = Color.white;
     }
 
-    private void Sacrifice()
+    private void OnDrawGizmosSelected()
     {
-        Instantiate(_bloodFlaque,transform.position + transform.up + new Vector3(Random.Range(-min, max), Random.Range(-min, max),0), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 380f)));
+        center = Vector3.RotateTowards(center, transform.up, 3.0f, 0.0f);
+        Gizmos.DrawSphere(_arrow.transform.position, _radius);
     }
 }

@@ -12,21 +12,17 @@ public class ActivateActivePauseHUD : MonoBehaviour
             _objectsToActivate[i].gameObject.SetActive(false);
         }
         _active = false;
+        InputManager.Instance.OnPauseActive += PauseActiveActivation;
     }
-
-    // Update is called once per frame
-    void Update()
+    void PauseActiveActivation()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (_active == false)
         {
-            if (_active == false)
-            {
-                ToggleActive(true,0.3f);
-            }
-            else
-            {
-                ToggleActive(false,1.0f);
-            }
+            ToggleActive(true, 0.3f);
+        }
+        else
+        {
+            ToggleActive(false, 1.0f);
         }
     }
 

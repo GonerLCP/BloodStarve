@@ -2,7 +2,7 @@ using Zenject;
 using UnityEngine;
 using System.Collections;
 
-public class TestInstaller : MonoInstaller
+public class ZenjectInstaller : MonoInstaller
 {
     public GameObject enemyPrefab;
     public GameObject bloodSplash;
@@ -16,6 +16,7 @@ public class TestInstaller : MonoInstaller
         Container.Bind<GameObject>().WithId("BloodFlaque").FromInstance(bloodFlaque);
         Container.Bind<GameObject>().WithId("BloodSplash").FromInstance(bloodSplash);
         Container.BindFactory<Enemy, Enemy.Factory>().FromComponentInNewPrefab(enemyPrefab).AsTransient();
+        Container.BindFactory<OutlineScript, OutlineScript.Factory>().FromComponentInNewPrefab(bloodFlaque).AsTransient();
     }
 }
 

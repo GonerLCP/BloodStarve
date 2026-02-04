@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df4a8f7d15b1c44097f96bd29c092cf, type: 3}
+  m_Name: SpellsDescription
+  m_EditorClassIdentifier: Assembly-CSharp::SpellsDescription
+  SpellName: Explosion
+  Description: "Fait exploser la flaque de sang et propulse les ennemis pr\xE9sent
+    dans l'explosion"
+  Cooldown: 0
+  Delay: 0.1

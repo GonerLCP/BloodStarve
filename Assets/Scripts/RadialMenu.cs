@@ -1,8 +1,10 @@
 using UnityEngine;
 
-public class FollowCursor : MonoBehaviour
+public class RadialMenu : MonoBehaviour
 {
-    public GameObject mask;
+    public int NumberOfSpells;
+    public PlayerSpells _playerSpells; //a injecter
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,6 +14,6 @@ public class FollowCursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mask.transform.position = Input.mousePosition;
+        
     }
 }
