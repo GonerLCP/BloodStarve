@@ -12,12 +12,13 @@ public class RadialMenu : MonoBehaviour
     public Vector3 position;
     public float radius;
     public GameObject tempToInstantiate;
-    public List<GameObject> ListInstatiatedObjects; 
+    public List<GameObject> ListInstatiatedObjects;
+    public Canvas RadialCanva;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        InstantiateObjects();
-        StartCoroutine(TestToDestroy());
+        
+        InputManager.Instance.OnRadialMenu +=InstantiateObjects;
     }
 
     // Update is called once per frame
@@ -28,13 +29,14 @@ public class RadialMenu : MonoBehaviour
 
     void InstantiateObjects()
     {
+        DestroyAllObjects();
         float nextAngle = 2 * Mathf.PI / NumberOfSpells;
         float angle = Mathf.PI/2;
         for (int i = 0; i < NumberOfSpells; i++) 
         {
-            float x = position.x + Mathf.Cos(angle)*radius;
-            float y = position.y + Mathf.Sin(angle)*radius;
-            GameObject temp = GameObject.Instantiate(tempToInstantiate, new Vector2(x,y), Quaternion.identity);
+            float x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x + Mathf.Cos(angle)*radius;
+            float y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y + Mathf.Sin(angle)*radius;
+            GameObject temp = GameObject.Instantiate(tempToInstantiate, new Vector2(x,y), Quaternion.identity, RadialCanva.transform);
             ListInstatiatedObjects.Add(temp);
             angle += nextAngle;
         }
@@ -49,11 +51,6 @@ public class RadialMenu : MonoBehaviour
         ListInstatiatedObjects.Clear();
     }
 
-    IEnumerator TestToDestroy()
-    {
-        yield return new WaitForSeconds(5);
-        DestroyAllObjects();
-    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawSphere(position, radius);

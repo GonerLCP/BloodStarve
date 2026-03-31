@@ -13,6 +13,8 @@ public class ZenjectInstaller : MonoInstaller
         Container.Bind<Greeter>().AsSingle().NonLazy();
         Container.Bind<PlayerScript>().FromComponentInHierarchy().AsSingle();
         Container.Bind<Enemy>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<ActivateActivePauseHUD>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<PlayerSpells>().FromComponentInHierarchy().AsSingle();
         Container.Bind<GameObject>().WithId("BloodFlaque").FromInstance(bloodFlaque);
         Container.Bind<GameObject>().WithId("BloodSplash").FromInstance(bloodSplash);
         Container.BindFactory<Enemy, Enemy.Factory>().FromComponentInNewPrefab(enemyPrefab).AsTransient();

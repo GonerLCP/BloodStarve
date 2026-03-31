@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4dd9ea83338b949b14df0d60284ae7, type: 3}
+  m_Name: New Explosion
+  m_EditorClassIdentifier: Assembly-CSharp::Explosion
+  SpellName: dfssdf
+  Description: gfg
+  Cooldown: 0
+  Delay: 0
+  SpellSprite: {fileID: 0}
+  _bloodSplash: {fileID: 7662517511563535169, guid: 6c0e5b9f973e10f46bef063cfeebd643, type: 3}
+  _bloodFlaque: {fileID: 6617781243423141696, guid: 72151ecced7142b4cac75cee95a1048c, type: 3}

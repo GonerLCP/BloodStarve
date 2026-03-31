@@ -1,6 +1,7 @@
-using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine;
+using Zenject;
 
 public class InputManager : MonoBehaviour
 {
@@ -8,8 +9,18 @@ public class InputManager : MonoBehaviour
     public Action OnCreateEnemy;
     public Action OnAttack;
     public Action OnPauseActive;
+    public Action OnRadialMenu;
     public event Action OnSacrifice;
     public event Action OnExplosion;
+
+    ActivateActivePauseHUD activateActivePauseHUD;
+    PlayerSpells playerSpells;
+    [Inject]
+    public void Construct(ActivateActivePauseHUD _hud,PlayerSpells _playerSpells)
+    {
+        activateActivePauseHUD = _hud;
+        playerSpells = _playerSpells;
+    }
     private void Awake()
     {
         if (Instance != null) Destroy(Instance);
@@ -26,6 +37,10 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             OnAttack?.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse0) && activateActivePauseHUD._active == true && playerSpells.CheckFlaque() == true)
+        {
+            OnRadialMenu?.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {

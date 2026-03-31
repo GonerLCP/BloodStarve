@@ -3,7 +3,7 @@ using UnityEngine;
 public class ActivateActivePauseHUD : MonoBehaviour
 {
     [SerializeField] private Transform[] _objectsToActivate;
-    private bool _active;
+    public bool _active { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

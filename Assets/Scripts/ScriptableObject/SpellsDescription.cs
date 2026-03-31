@@ -11,5 +11,7 @@ public class SpellsDescription : ScriptableObject
     public float Cooldown;
     public float Delay;
 
-    public Image SpellSprite;
+    public Sprite SpellSprite;
+
+    public PlayerSpells script;
 }
